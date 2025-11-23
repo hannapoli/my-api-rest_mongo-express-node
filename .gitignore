@@ -1,0 +1,27 @@
+# Node modules
+node_modules
+
+# Directorios de sistema
+.DS_Store       # Mac
+Thumbs.db       # Windows
+desktop.ini     # Windows
+*.swp           # Linux/Mac swap files
+*.swo
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Archivos temporales del sistema
+*.tmp
+*.temp
+*.bak
+*.old
+
+# Otros archivos ocultos
+*.DS_Store
+.idea/          # Si usas JetBrains IDEs
+*.iml
+
+# Variables del entorno
+.env
