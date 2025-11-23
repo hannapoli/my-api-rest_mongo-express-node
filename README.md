@@ -14,11 +14,13 @@ El proyecto está despliegado en [Render]().
 - Eliminar un servicio.
 
 ## Cada servicio tentiene un esquema básico:
-
-nombre: string
-descripcion: string
-precio: number
-
+``` JavaScript
+{
+  nombre: string,
+  descripcion: string,
+  precio: number
+}
+```
 ## Características principales:
 
 ### Backend
@@ -65,7 +67,7 @@ Para el proceso de desarrollo se utiliza el paquete [nodemon](https://www.npmjs.
 
 ### 3. Variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto:
+Crea un archivo `.env` en la raíz del proyecto con las variables del archivo .env.template:
 
 ``` JavaScript
 PORT=<port>
@@ -131,11 +133,11 @@ Respuesta (200 OK):
   "data": [
     {
       "_id": "678ac15b2a48a4f6c3cc1234",
-      ...
+      //...
     },
     {
       "_id": "678ac1f62a48a4f6c3cc5678",
-      ...
+      //...
     }
   ]
 }
@@ -150,7 +152,7 @@ Respuesta (200 OK):
 {
   "ok":true,
   "message": "Servicio encontrado",
-  "data": { ... }
+  //"data": { ... }
 }
 ```
 Si el ID no existe (404 NOT FOUND):
@@ -178,7 +180,7 @@ Respuesta (200 OK):
   "message": "Servicio actualizado correctamente",
   "data": {
     "_id": "678ac15b2a48a4f6c3cc1234",
-    ...
+    //...
     "precio": 150,
     "__v": 0
   }
