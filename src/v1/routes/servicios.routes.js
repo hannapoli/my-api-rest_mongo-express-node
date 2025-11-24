@@ -3,7 +3,7 @@ const router = express.Router();
 const { createService, getAllServices, getServiceById, modifyServiceById, deleteServiceById } = require("../../controllers/servicios.controllers");
 
 //Crear servicio:
-router.post("/", createService);
+router.post("/crear", createService);
 //Obtener todos los servicios:
 router.get("/", getAllServices);
 //Obtener un servicio por ID:

@@ -2,146 +2,115 @@ const Servicio = require("../models/servicio.model");
 
 //Crear servicio:
 const createService = async (req, res) => {
-    const cliente = new Cliente()
-    //capturar el body
     try {
-        // Acceder a la base de datos con el metodo correspondiente del model pasandole el body
-        //en caso de que este todo bien tendre que retormar la respuesta
-        /* 
-            respuesta.status(xxx).json({})
-            //controlar el error si este objeto ya existe
-        */
+        const nuevoServicio = await Servicio.create(req.body);
+        return res.status(201).json({
+            ok: true,
+            message: "Servicio creado correctamente.",
+            data: nuevoServicio
+        })
     } catch (error) {
-        //Gestionar si hay error
-        /* 
-              respuesta.status(500).json({})
-        */
+        if (error.code === 11000) {
+            return res.status(400).json({
+                ok: false,
+                message: "El nombre del servicio ya existe."
+            });
+        }
+        return res.status(500).json({
+            ok: false,
+            message: "Error, no se ha podido crear el servicio."
+        });
     }
 }
 
 //Obtener todos los servicios:
-const getAllServices = () => {
-
+const getAllServices = async (req, res) => {
     try {
-        // Acceder a la base de datos con el metodo correspondiente del model
-        //en caso de que este todo bien tendre que retormar la respuesta
-        /* 
-            respuesta.status(xxx).json({})
-        */
+        const servicios = await Servicio.find();
+        if (servicios.length === 0) {
+            return res.status(404).json({
+                ok: false,
+                message: "No hay ningún servicio registrado."
+            });
+        }
+        return res.status(200).json({
+            ok: true,
+            message: "Lista de servicios",
+            data: servicios
+        });
     } catch (error) {
-        //Gestionar si hay error
-        /* 
-              respuesta.status(500).json({})
-        */
+        return res.status(500).json({
+            ok: false,
+            message: "Error, no se han podido obtener los servicios."
+        });
     }
-
 }
 
 //Obtener un servicio por ID:
-const getServiceById = () => {
-
-    //buscar el id el los params del endPoint
-
+const getServiceById = async (req, res) => {
     try {
-
-
-
-        // Acceder a la base de datos con el metodo correspondiente del model
-        //en caso de que este todo bien tendre que retormar la respuesta
-
-
-        //comprobar si existe
-
-        /* 
-            si existe responder
-
-            respuesta.status(404).json({
-            })
-        
-        */
-
-        /* si no existe 
-                respuesta.status().json()
-        */
-
-
+        const servicio = await Servicio.findById(req.params.id);
+        if (!servicio) {
+            return res.status(404).json({
+                ok: false,
+                message: "Servicio no encontrado."
+            });
+        }
+        return res.status(200).json({
+            ok: true,
+            message: "Servicio encontrado.",
+            data: servicio
+        });
     } catch (error) {
-        //Gestionar si hay error
-        /* 
-              respuesta.status(500).json({})
-        */
+        return res.status(500).json({
+            ok: false,
+            message: "Error, no se han podido obtener el servicio."
+        });
     }
-
 }
 
 //Actualizar un servicio por ID:
-const modifyServiceById = () => {
-
-    //buscar el id el los params del endPoint
-
+const modifyServiceById = async (req, res) => {
     try {
-
-        // Acceder a la base de datos con el metodo correspondiente del modelpara buscar el servicio por su id
-
-        //comprobar si existe
-
-        /* 
-        // Acceder a la base de datos con el metodo correspondiente del model para editar su id
-
-            si existe responder
-
-            respuesta.status(xxx).json({
-            })
-        
-        */
-
-        /* si no existe 
-                respuesta.status().json()
-        */
-
-
+        const servicio = await Servicio.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        if (!servicio) {
+            return res.status(404).json({
+                ok: false,
+                message: "Servicio no encontrado."
+            });
+        }
+        return res.status(200).json({
+            ok: true,
+            message: "Servicio actualizado correctamente",
+            data: servicio
+        });
     } catch (error) {
-        //Gestionar si hay error
-        /* 
-              respuesta.status(500).json({})
-        */
+        return res.status(500).json({
+            ok: false,
+            message: "Error, no se han podido modificar el servicio."
+        });
     }
-
 }
-
 //Eliminar un servicio por ID:
-const deleteServiceById = () => {
-
-    //buscar el id el los params del endPoint
-
+const deleteServiceById = async (req, res) => {
     try {
-        // Acceder a la base de datos con el metodo correspondiente del modelpara buscar el servicio por su id
-
-
-        //comprobar si existe
-
-        /* 
-        // Acceder a la base de datos con el metodo correspondiente del model para eliminar su id
-
-            si existe responder
-
-            respuesta.status(xxx).json({
-            })
-        
-        */
-
-        /* si no existe 
-                respuesta.status().json()
-        */
-
-
+        const servicio = await Servicio.findByIdAndDelete(req.params.id);
+        if (!servicio) {
+            return res.status(404).json({
+                ok: false,
+                message: "Servicio no encontrado."
+            });
+        }
+        return res.status(200).json({
+            ok: true,
+            message: "Servicio eliminado correctamente.",
+        });
     } catch (error) {
-        //Gestionar si hay error
-        /* 
-              respuesta.status(500).json({})
-        */
+        return res.status(500).json({
+            ok: false,
+            message: "Error, no se han podido eliminar el servicio."
+        });
     }
-
 }
 
 module.exports = {
