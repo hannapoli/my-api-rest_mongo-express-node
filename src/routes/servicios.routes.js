@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createService, getAllServices, getServiceById, modifyServiceById, deleteServiceById } = require("../../controllers/servicios.controllers");
+const { createService, getAllServices, getServiceById, modifyServiceById, deleteServiceById } = require("../controllers/servicios.controllers");
 
 //Crear servicio:
 router.post("/crear", createService);

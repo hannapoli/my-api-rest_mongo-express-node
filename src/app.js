@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 //Middlewares
-app.use(express.static(__dirname + "public"));
+app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(cors());
 
@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
     res.render("inicio.ejs");
 });
 
-app.use("/api/v1/servicios", require("./v1/routes/servicios.routes"));
+app.use("/api/v1/servicios", require("./routes/servicios.routes"));
 
 app.listen(port, () => {
     console.log(`A la escucha del puerto ${port}`);
