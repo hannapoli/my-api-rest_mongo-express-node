@@ -1,19 +1,20 @@
-const express = require("express");
 require("dotenv").config();
-
-const { conectarBD } = require("./configs/dbConnect")
+const express = require("express");
+const dbConnect = require("./configs/dbConnect")
+const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-//BBDD:
-conectarBD()
-    .then((response) => console.log('Conectado a la base de datos.'))
-    .catch((error) => console.log(error));
-
 //Middlewares
 app.use(express.static(__dirname + "public"));
 app.use(express.json());
+app.use(cors());
+
+//BBDD:
+dbConnect()
+    .then((response) => console.log('Conectado a la base de datos.'))
+    .catch((error) => console.error(error));
 
 //Configurar EJS:
 app.set("view engine", "ejs");
@@ -22,17 +23,9 @@ app.set("views", __dirname + "/views");
 //Rutas:
 app.get("/", (req, res) => {
     res.render("inicio.ejs");
-})
-//Crear servicio:
-app.use("/servicios", require("./v1/routes/crear-servicio.route"));
-//Obtener todos los servicios:
-app.use("/servicios", require("./v1/routes/get-servicios.route"));
-//Obtener un servicio por ID:
-app.use("/servicios/:id", require("./v1/routes/get-servicio-id.route"));
-//Actualizar un servicio:
-app.use("/servicios/:id", require("./v1/routes/modificar-servicio-id.route"));
-//Eliminar un servicio:
-app.use("/servicios/:id", require("./v1/routes/eliminar-servicio-id.route"));
+});
+
+app.use("/api/v1/servicios", require("./v1/routes/servicios.routes"));
 
 app.listen(port, () => {
     console.log(`A la escucha del puerto ${port}`);

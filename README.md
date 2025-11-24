@@ -184,7 +184,7 @@ Respuesta (200 OK):
   "message": "Servicio actualizado correctamente",
   "data": {
     "_id": "678ac15b2a48a4f6c3cc1234",
-    //...
+    "etc.": "...",
     "precio": 150,
     "__v": 0
   }
