@@ -1,8 +1,15 @@
 const express = require("express");
 require("dotenv").config();
 
+const { conectarBD } = require("./configs/dbConnect")
+
 const app = express();
 const port = process.env.PORT || 3000;
+
+//BBDD:
+conectarBD()
+    .then((response) => console.log('Conectado a la base de datos.'))
+    .catch((error) => console.log(error));
 
 //Middlewares
 app.use(express.static(__dirname + "public"));

@@ -16,9 +16,13 @@ El proyecto está despliegado en [Render]().
 ## Cada servicio tentiene un esquema básico:
 ``` JavaScript
 {
-  nombre: string,
-  descripcion: string,
-  precio: number
+  nombre: {
+          type: String,
+          require: true,
+          unique: true
+          },
+  descripcion: String,
+  precio: Number
 }
 ```
 ## Características principales:
@@ -133,11 +137,11 @@ Respuesta (200 OK):
   "data": [
     {
       "_id": "678ac15b2a48a4f6c3cc1234",
-      //...
+      "etc.": "..."
     },
     {
       "_id": "678ac1f62a48a4f6c3cc5678",
-      //...
+      "etc.": "..."
     }
   ]
 }
@@ -152,7 +156,7 @@ Respuesta (200 OK):
 {
   "ok":true,
   "message": "Servicio encontrado",
-  //"data": { ... }
+  "etc.": "..."
 }
 ```
 Si el ID no existe (404 NOT FOUND):
