@@ -1,4 +1,4 @@
-const Servicio = require("../models/servicio.model");
+const Servicio = require("../models/Servicio.model");
 
 //Crear servicio:
 const createService = async (req, res) => {
