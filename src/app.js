@@ -1,7 +1,7 @@
-require("dotenv").config();
 const express = require("express");
-const dbConnect = require("./configs/dbConnect")
 const cors = require("cors");
+require("dotenv").config();
+const dbConnect = require("./configs/dbConnect")
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,6 +9,7 @@ const port = process.env.PORT || 3000;
 //Middlewares
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
+app.use(express.urlencoded());
 app.use(cors());
 
 //BBDD:

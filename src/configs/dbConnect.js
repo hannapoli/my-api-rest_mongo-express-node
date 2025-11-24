@@ -6,7 +6,7 @@ const dbConnect = async () => {
         const response = await mongoose.connect(uri);
         return response;
     } catch (error) {
-        throw {
+        return {
             ok: false,
             message: "Error: no se ha podido conectar con la base de datos."
         }

@@ -3,13 +3,15 @@ const Servicio = require("../models/Servicio.model");
 //Crear servicio:
 const createService = async (req, res) => {
     try {
-        const nuevoServicio = await Servicio.create(req.body);
+        const nuevoServicio = new Servicio(req.body);
+        const servicioGuardado = await nuevoServicio.save();
         return res.status(201).json({
             ok: true,
             message: "Servicio creado correctamente.",
-            data: nuevoServicio
+            data: servicioGuardado
         })
     } catch (error) {
+        console.error(error);
         if (error.code === 11000) {
             return res.status(400).json({
                 ok: false,
@@ -18,7 +20,7 @@ const createService = async (req, res) => {
         }
         return res.status(500).json({
             ok: false,
-            message: "Error, no se ha podido crear el servicio."
+            message: "Error, no se ha podido crear el servicio. Consulte su administrador."
         });
     }
 }
@@ -39,9 +41,10 @@ const getAllServices = async (req, res) => {
             data: servicios
         });
     } catch (error) {
+        console.error(error);
         return res.status(500).json({
             ok: false,
-            message: "Error, no se han podido obtener los servicios."
+            message: "Error, no se han podido obtener los servicios. Consulte su administrador."
         });
     }
 }
@@ -49,7 +52,8 @@ const getAllServices = async (req, res) => {
 //Obtener un servicio por ID:
 const getServiceById = async (req, res) => {
     try {
-        const servicio = await Servicio.findById(req.params.id);
+        const { id } = req.params;
+        const servicio = await Servicio.findById(id);
         if (!servicio) {
             return res.status(404).json({
                 ok: false,
@@ -62,9 +66,10 @@ const getServiceById = async (req, res) => {
             data: servicio
         });
     } catch (error) {
+        console.error(error);
         return res.status(500).json({
             ok: false,
-            message: "Error, no se han podido obtener el servicio."
+            message: "Error, no se han podido obtener el servicio. Consulte su administrador."
         });
     }
 }
@@ -72,7 +77,8 @@ const getServiceById = async (req, res) => {
 //Actualizar un servicio por ID:
 const modifyServiceById = async (req, res) => {
     try {
-        const servicio = await Servicio.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        const { id } = req.params;
+        const servicio = await Servicio.findByIdAndUpdate(id, req.body, { new: true })
         if (!servicio) {
             return res.status(404).json({
                 ok: false,
@@ -85,16 +91,18 @@ const modifyServiceById = async (req, res) => {
             data: servicio
         });
     } catch (error) {
+        console.error(error);
         return res.status(500).json({
             ok: false,
-            message: "Error, no se han podido modificar el servicio."
+            message: "Error, no se han podido modificar el servicio. Consulte su administrador."
         });
     }
 }
 //Eliminar un servicio por ID:
 const deleteServiceById = async (req, res) => {
     try {
-        const servicio = await Servicio.findByIdAndDelete(req.params.id);
+        const { id } = req.params;
+        const servicio = await Servicio.findByIdAndDelete(id);
         if (!servicio) {
             return res.status(404).json({
                 ok: false,
@@ -104,11 +112,13 @@ const deleteServiceById = async (req, res) => {
         return res.status(200).json({
             ok: true,
             message: "Servicio eliminado correctamente.",
+            data: servicio
         });
     } catch (error) {
+        console.error(error);
         return res.status(500).json({
             ok: false,
-            message: "Error, no se han podido eliminar el servicio."
+            message: "Error, no se han podido eliminar el servicio. Consulte su administrador."
         });
     }
 }
