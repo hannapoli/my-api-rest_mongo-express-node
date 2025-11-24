@@ -99,7 +99,7 @@ http://localhost:3000/api/v1/servicios
 ```
 ### 1. Crear un servicio
 
-**POST** `/api/v1/servicios`
+**POST** `/api/v1/servicios/crear`
 
 Body:
 ```json
