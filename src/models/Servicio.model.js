@@ -10,7 +10,9 @@ const ServicioSchema = new Schema({
     precio: {
         type: Number,
         required: true
-    }
+    },
+    emailVendedor: String
+
 });
 
 module.exports = model("Servicio", ServicioSchema);
