@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/servicios", require("./routes/servicios.routes"));
+app.use("/api/v1/auth", require("./routes/users.routes"));
 
 app.listen(port, () => {
     console.log(`A la escucha del puerto ${port}`);

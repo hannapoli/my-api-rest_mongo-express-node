@@ -38,6 +38,7 @@ router.get("/:id", [
 router.put("/:id", [
     check("id").isMongoId().withMessage("Escriba ID correcto"),
     check("nombre")
+        .optional({ checkFalsy: true })
         .notEmpty().withMessage("Escriba el nombre del servicio")
         .trim()
         .isString().withMessage("Escriba un nómbre válido")

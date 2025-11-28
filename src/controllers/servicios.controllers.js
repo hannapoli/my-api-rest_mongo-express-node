@@ -3,6 +3,14 @@ const Servicio = require("../models/Servicio.model");
 //Crear servicio:
 const createService = async (req, res) => {
     try {
+        const { nombre } = (req.body);
+        const existe = await Servicio.findOne({ nombre });
+        if (existe) {
+            return res.status(400).json({
+                ok: false,
+                message: "El nombre del servicio ya existe."
+            })
+        }
         const nuevoServicio = new Servicio(req.body);
         const servicioGuardado = await nuevoServicio.save();
         return res.status(201).json({
