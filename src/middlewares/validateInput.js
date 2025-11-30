@@ -1,13 +1,12 @@
 const { validationResult } = require("express-validator");
 
 const validateInput = (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            ok: false,
-            message: "Error de validación de datos.",
-            errors: errors.mapped()
-        });
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        const err = new Error("Error de validación de datos.");
+        err.status = 400;
+        err.errors = errores.mapped();
+        return next(err);
     };
     next();
 }

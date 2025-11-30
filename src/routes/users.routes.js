@@ -4,7 +4,6 @@ const { check } = require("express-validator");
 const { createUser, loginUser, renewToken } = require("../controllers/users.controllers");
 const { validateInput } = require("../middlewares/validateInput");
 const { verifyJWT } = require("../middlewares/verifyJWT");
-const { verifyRole } = require("../middlewares/verifyRole");
 
 //Registrarse:
 router.post("/new", [
