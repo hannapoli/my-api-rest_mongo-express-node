@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const dbConnect = require("./configs/dbConnect")
+const dbConnect = require("./configs/dbConnect");
+const { errorHandler } = require("./middlewares/errorHandler");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -28,6 +29,13 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/servicios", require("./routes/servicios.routes"));
 app.use("/api/v1/auth", require("./routes/users.routes"));
+
+app.use((req, res, next) => {
+    const err = new Error("Ruta no encontrada.");
+    err.status = 404;
+    next(err);
+});
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`A la escucha del puerto ${port}`);

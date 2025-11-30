@@ -5,10 +5,9 @@ const verifyJWT = (req, res, next) => {
     const token = req.headers["authorization"]?.split(' ')[1];
 
     if (!token) {
-        return res.status(403).json({
-            ok: false,
-            message: "No hay token en la petición."
-        })
+        const err = new Error("No hay token en la petición.");
+        err.status = 403;
+        return next(err);
     };
     try {
         const payload = jwt.verify(token, process.env.SECRET_KEY);
@@ -19,16 +18,12 @@ const verifyJWT = (req, res, next) => {
         };
 
         req.userToken = userToken;
+        next();
 
     } catch (error) {
-        console.log(error)
-        return res.status(401).json({
-            ok: false,
-            message: "Error: token no válido."
-        })
+        error.status = 401;
+        return next(err);
     }
-
-    next();
 }
 
 module.exports = { verifyJWT };

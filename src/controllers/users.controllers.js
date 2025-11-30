@@ -2,28 +2,26 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User.model");
 const { JWTgenerator } = require("../utils/jwt");
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
     try {
         const { name, email, password, role } = req.body;
         const existeUsuario = await User.findOne({ email });
         if (existeUsuario) {
-            return res.status(400).json({
-                ok: false,
-                message: "El usuario ya existe."
-            });
+            const err = new Error("El usuario ya existe.");
+            err.status = 400;
+            throw err;
         }
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const usuarioNuevo = {
             name,
             email,
             password: hashedPassword,
-            role: role || 'user'
+            role: role || "user"
         }
 
-        const usuario = new User(usuarioNuevo);
-        const usuarioGuardado = await usuario.save();
+        const usuarioGuardado = await User.create(usuarioNuevo);
 
         const payload = {
             uid: usuarioGuardado._id,
@@ -39,37 +37,25 @@ const createUser = async (req, res) => {
             user: usuarioGuardado,
             token: token
         })
-    } catch (error) {
-        console.log(error);
-        if (error.code === 11000) {
-            return res.status(400).json({
-                ok: false,
-                message: "El usuario ya existe."
-            });
-        }
-        return res.status(500).json({
-            ok: false,
-            message: "Error, no se ha podido crear el usuario. Consulte su administrador."
-        });
+    } catch (err) {
+        next(err)
     }
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const usuario = await User.findOne({ email })
         if (!usuario) {
-            res.status(400).json({
-                ok: false,
-                message: 'No hay usuario con ese email.',
-            })
+            const err = new Error("No hay usuario con este email.");
+            err.status = 400;
+            throw err;
         };
-        const passwordOk = bcrypt.compareSync(password, usuario.password);
+        const passwordOk = await bcrypt.compare(password, usuario.password);
         if (!passwordOk) {
-            return res.status(401).json({
-                ok: false,
-                message: 'La contraseña no es válida',
-            })
+            const err = new Error("La contraseña no es válida.");
+            err.status = 401;
+            throw err;
         }
 
         const payload = {
@@ -91,16 +77,12 @@ const loginUser = async (req, res) => {
             user: user,
             token: token
         })
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: "Error, no se ha podido crear el usuario. Consulte su administrador."
-        });
+    } catch (err) {
+        next(err);
     }
 };
 
-const renewToken = async (req, res) => {
+const renewToken = async (req, res, next) => {
     try {
         const { uid, name, role } = req.userToken;
 
@@ -125,12 +107,8 @@ const renewToken = async (req, res) => {
             token
         });
 
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: "Error: no se ha podido renovar el token. Consulte su administrador."
-        });
+    } catch (err) {
+        next(err);
     }
 };
 

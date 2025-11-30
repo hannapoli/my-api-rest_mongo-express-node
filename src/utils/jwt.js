@@ -7,7 +7,7 @@ const JWTgenerator = (payload) => {
             payload, process.env.SECRET_KEY, { expiresIn: "2h" }, (error, token) => {
                 if (error) {
                     console.log(error);
-                    reject('error');
+                    reject(error);
                 } else {
                     resolve(token);
                 }

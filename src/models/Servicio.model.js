@@ -11,7 +11,10 @@ const ServicioSchema = new Schema({
         type: Number,
         required: true
     },
-    emailVendedor: String
+    emailVendedor: {
+        type: String,
+        lowercase: true
+    }
 
 });
 

@@ -1,15 +1,14 @@
 const Servicio = require("../models/Servicio.model");
 
 //Crear servicio:
-const createService = async (req, res) => {
+const createService = async (req, res, next) => {
     try {
         const { nombre } = (req.body);
         const existe = await Servicio.findOne({ nombre });
         if (existe) {
-            return res.status(400).json({
-                ok: false,
-                message: "El nombre del servicio ya existe."
-            })
+            const err = new Error("El nombre del servicio ya existe.");
+            err.status = 400;
+            throw err;
         }
         const nuevoServicio = new Servicio(req.body);
         const servicioGuardado = await nuevoServicio.save();
@@ -18,29 +17,20 @@ const createService = async (req, res) => {
             message: "Servicio creado correctamente.",
             data: servicioGuardado
         })
-    } catch (error) {
-        console.error(error);
-        if (error.code === 11000) {
-            return res.status(400).json({
-                ok: false,
-                message: "El nombre del servicio ya existe."
-            });
-        }
-        return res.status(500).json({
-            ok: false,
-            message: "Error, no se ha podido crear el servicio. Consulte su administrador."
-        });
+    } catch (err) {
+        next(err);
     }
 }
 
 //Obtener todos los servicios:
-const getAllServices = async (req, res) => {
+const getAllServices = async (req, res, next) => {
     try {
         const servicios = await Servicio.find();
         if (servicios.length === 0) {
-            return res.status(404).json({
-                ok: false,
-                message: "No hay ningún servicio registrado."
+            return res.status(200).json({
+                ok: true,
+                message: "No hay ningún servicio registrado.",
+                data: []
             });
         }
         return res.status(200).json({
@@ -48,86 +38,67 @@ const getAllServices = async (req, res) => {
             message: "Lista de servicios",
             data: servicios
         });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            ok: false,
-            message: "Error, no se han podido obtener los servicios. Consulte su administrador."
-        });
+    } catch (err) {
+        next(err);
     }
 }
 
 //Obtener un servicio por ID:
-const getServiceById = async (req, res) => {
+const getServiceById = async (req, res, next) => {
     try {
         const { id } = req.params;
         const servicio = await Servicio.findById(id);
         if (!servicio) {
-            return res.status(404).json({
-                ok: false,
-                message: "Servicio no encontrado."
-            });
+            const err = new Error("Servicio no encontrado.");
+            err.status = 404;
+            throw err;
         }
         return res.status(200).json({
             ok: true,
             message: "Servicio encontrado.",
             data: servicio
         });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            ok: false,
-            message: "Error, no se han podido obtener el servicio. Consulte su administrador."
-        });
+    } catch (err) {
+        next(err);
     }
 }
 
 //Actualizar un servicio por ID:
-const modifyServiceById = async (req, res) => {
+const modifyServiceById = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const servicio = await Servicio.findByIdAndUpdate(id, req.body, { new: true })
+        const servicio = await Servicio.findByIdAndUpdate(id, req.body, { new: true, runValidators: true })
         if (!servicio) {
-            return res.status(404).json({
-                ok: false,
-                message: "Servicio no encontrado."
-            });
+            const err = new Error("Servicio no encontrado.");
+            err.status = 404;
+            throw err;
         }
         return res.status(200).json({
             ok: true,
             message: "Servicio actualizado correctamente",
             data: servicio
         });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            ok: false,
-            message: "Error, no se han podido modificar el servicio. Consulte su administrador."
-        });
+    } catch (err) {
+        next(err);
     }
 }
 //Eliminar un servicio por ID:
-const deleteServiceById = async (req, res) => {
+const deleteServiceById = async (req, res, next) => {
     try {
         const { id } = req.params;
         const servicio = await Servicio.findByIdAndDelete(id);
         if (!servicio) {
-            return res.status(404).json({
-                ok: false,
-                message: "Servicio no encontrado."
-            });
+            const err = new Error("Servicio no encontrado.");
+            err.status = 404;
+            throw err;
         }
         return res.status(200).json({
             ok: true,
             message: "Servicio eliminado correctamente.",
             data: servicio
         });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            ok: false,
-            message: "Error, no se han podido eliminar el servicio. Consulte su administrador."
-        });
+    } catch (err) {
+        next(err);
     }
 }
 
